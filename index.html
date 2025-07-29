@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>跳转中...</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background-color: #f0f2f5;
+      text-align: center;
+      padding: 50px 20px;
+    }
+
+    .guide-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      backdrop-filter: blur(6px);
+      background-color: rgba(0, 0, 0, 0.65);
+      z-index: 9999;
+      color: #fff;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 30px;
+    }
+
+    .guide-content {
+      max-width: 300px;
+    }
+
+    .guide-content img {
+      width: 120px;
+      margin-bottom: 20px;
+      animation: bounce 1.5s infinite;
+    }
+
+    .guide-content h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .guide-content p {
+      font-size: 15px;
+      color: #ddd;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- 微信引导层 -->
+<div class="guide-overlay" id="wechatGuide">
+  <div class="guide-content">
+    <img src="arrow.png" alt="向上箭头" />
+    <h2>请点击右上角 ···</h2>
+    <p>选择“在浏览器中打开”以继续访问</p>
+  </div>
+</div>
+
+<script>
+  // ✅ 加密后的跳转链接（Base64 编码）
+  const encodedUrl = "aHR0cDovL2Vhc3RsaW9uYWQuY24vSW5kdGx6eC5odG1sP2h0dHBzOi8vZ2dlcnNjLnNob3AvaUhkZ25YL3dpeXJ1aXdycHUvcnlldQ==";
+
+  // Base64 解码函数，带简单校验
+  function safeBase64Decode(encoded) {
+    try {
+      const decoded = atob(encoded);
+      if (!decoded.startsWith("http")) return null;
+      return decoded;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // 判断是否微信内置浏览器
+  function isWeChatBrowser() {
+    const ua = navigator.userAgent.toLowerCase();
+    return ua.includes("micromessenger");
+  }
+
+  window.onload = function () {
+    const guide = document.getElementById("wechatGuide");
+    const decodedUrl = safeBase64Decode(encodedUrl);
+
+    if (!decodedUrl) {
+      document.body.innerHTML = "<p>跳转地址非法或已损坏。</p>";
+      return;
+    }
+
+    if (isWeChatBrowser()) {
+      // 微信中显示引导
+      guide.style.display = "flex";
+    } else {
+      // 非微信中 → 延迟跳转
+      setTimeout(() => {
+        window.location.href = decodedUrl;
+      }, 1000);
+    }
+  };
+</script>
+
+</body>
+</html>
