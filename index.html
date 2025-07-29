@@ -31,7 +31,7 @@
       color: #fff;
     }
 
-    .guide-box img {
+    .guide-box img.arrow {
       width: 100px;
       animation: bounce 1.5s infinite;
       margin-bottom: 5px;
@@ -48,18 +48,49 @@
       color: #ddd;
     }
 
+    .center-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .center-logo img {
+      width: 80px;
+      opacity: 0.95;
+      animation:
+        spin 10s linear infinite,
+        pulse 2s ease-in-out infinite alternate;
+    }
+
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-8px); }
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.5; }
+      100% { opacity: 1; }
     }
   </style>
 </head>
 <body>
 
-<!-- 微信引导层 -->
+<!-- 引导层 -->
 <div class="guide-overlay" id="wechatGuide">
+  <!-- 居中 Logo 动效 -->
+  <div class="center-logo">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/ae/Xiaomi_logo_%282021-%29.svg" alt="小米 Logo">
+  </div>
+
+  <!-- 右上角引导提示 -->
   <div class="guide-box">
-    <img src="arrow.png" alt="向上箭头" />
+    <img src="arrow.png" class="arrow" alt="向上箭头" />
     <h2>点击右上角 ···</h2>
     <p>选择“在浏览器中打开”</p>
   </div>
